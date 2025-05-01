@@ -82,6 +82,9 @@ app.use("/user", userRouter);
 app.use("/chat", chatRouter);
 app.use("/message", messageRouter);
 app.use("/auth", authRouter);
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  res.send("<h1>hello world</h1>");
+});
 
 app.use(
   (
