@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/src/app.js",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node dist/src/app.js",
     "build": "tsc",
     "test": "jest --runInBand",
     "dev": "nodemon src/app.ts"
