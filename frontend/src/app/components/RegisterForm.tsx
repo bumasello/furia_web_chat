@@ -27,19 +27,22 @@ export default function RegisterForm(): JSX.Element {
     }
 
     try {
-      const res = await fetch("/user/createuser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://furia-web-chat-api.onrender.com/user/createuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            first_name,
+            last_name,
+            email,
+            username,
+            password,
+          }),
         },
-        body: JSON.stringify({
-          first_name,
-          last_name,
-          email,
-          username,
-          password,
-        }),
-      });
+      );
 
       const data = await res.json();
       if (!res.ok) {

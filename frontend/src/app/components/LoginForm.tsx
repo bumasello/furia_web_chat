@@ -27,16 +27,19 @@ export default function LoginForm(): JSX.Element {
     }
 
     try {
-      const res = await fetch("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://furia-web-chat-api.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      );
       const data = await res.json();
       if (!res.ok) {
         const detail = data.data;

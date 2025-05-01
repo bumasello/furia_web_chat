@@ -65,7 +65,7 @@ export default function Dashboard(): JSX.Element {
   useEffect(() => {
     if (!token) return;
 
-    const socket = io("http://localhost:8080", {
+    const socket = io("https://furia-web-chat-api.onrender.com", {
       auth: { token },
     });
     socketRef.current = socket;
@@ -100,9 +100,12 @@ export default function Dashboard(): JSX.Element {
     // chats
     (async () => {
       try {
-        const res = await fetch(`/chat/getuserchat/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          `https://furia-web-chat-api.onrender.com/chat/getuserchat/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         if (!res.ok) throw new Error();
         const data = await res.json();
         setChats(data.chats || []);
@@ -115,9 +118,12 @@ export default function Dashboard(): JSX.Element {
     // friendlist
     (async () => {
       try {
-        const res = await fetch("/user/friendlist", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          "https://furia-web-chat-api.onrender.com/user/friendlist",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         if (!res.ok) throw new Error();
         const all: User[] = (await res.json()).data || [];
         setFriends(all.filter((u) => u._id !== userId));
@@ -139,9 +145,12 @@ export default function Dashboard(): JSX.Element {
 
     (async () => {
       try {
-        const res = await fetch(`/message/getchatmessage/${selectedChat._id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          `https://furia-web-chat-api.onrender.com/message/getchatmessage/${selectedChat._id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         if (!res.ok) throw new Error();
         const data = await res.json();
         setMessages(data.messages || []);
@@ -159,14 +168,17 @@ export default function Dashboard(): JSX.Element {
     e.preventDefault();
     if (!input.trim() || !selectedChat) return;
     try {
-      const res = await fetch(`/message/createmessage/${selectedChat._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `https://furia-web-chat-api.onrender.com/message/createmessage/${selectedChat._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ message: input }),
         },
-        body: JSON.stringify({ message: input }),
-      });
+      );
       if (!res.ok) throw new Error();
       const { result } = await res.json();
       const newMsg: Message = {
@@ -191,18 +203,21 @@ export default function Dashboard(): JSX.Element {
     lname: string,
   ) => {
     try {
-      const res = await fetch(`/chat/createchat/${friendId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `https://furia-web-chat-api.onrender.com/chat/createchat/${friendId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            desc: "private",
+            isPrivate: true,
+            name: `${fname} ${lname}`,
+          }),
         },
-        body: JSON.stringify({
-          desc: "private",
-          isPrivate: true,
-          name: `${fname} ${lname}`,
-        }),
-      });
+      );
       if (!res.ok) throw new Error();
       const { data: newChat } = await res.json();
       const chatObj: Chat = {
@@ -231,19 +246,22 @@ export default function Dashboard(): JSX.Element {
     if (!publicChatName.trim()) return;
 
     try {
-      const res = await fetch(`/chat/createchat/${userId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `https://furia-web-chat-api.onrender.com/chat/createchat/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            desc: "group",
+            isPrivate: false,
+            name: publicChatName,
+            description: publicChatDesc || "Chat público",
+          }),
         },
-        body: JSON.stringify({
-          desc: "group",
-          isPrivate: false,
-          name: publicChatName,
-          description: publicChatDesc || "Chat público",
-        }),
-      });
+      );
 
       if (!res.ok) throw new Error();
       const { data } = await res.json();
@@ -272,7 +290,7 @@ export default function Dashboard(): JSX.Element {
       if (searchType === "users") {
         if (query.trim()) {
           const res = await fetch(
-            `http://localhost:8080/user/getuser/${query.trim()}`,
+            `https://furia-web-chat-api.onrender.com/user/getuser/${query.trim()}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             },
@@ -280,9 +298,12 @@ export default function Dashboard(): JSX.Element {
           const { users } = await res.json();
           fetched = [users];
         } else {
-          const res = await fetch("http://localhost:8080/user/getuser/", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const res = await fetch(
+            "https://furia-web-chat-api.onrender.com/user/getuser/",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
           const { users } = await res.json();
           fetched = users;
         }
@@ -290,7 +311,7 @@ export default function Dashboard(): JSX.Element {
       } else {
         if (query.trim()) {
           const res = await fetch(
-            `http://localhost:8080/chat/getchat/${query.trim()}`,
+            `https://furia-web-chat-api.onrender.com/chat/getchat/${query.trim()}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             },
@@ -298,9 +319,12 @@ export default function Dashboard(): JSX.Element {
           const { chat } = await res.json();
           fetchedChat = [chat];
         } else {
-          const res = await fetch("http://localhost:8080/chat/getchat/", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const res = await fetch(
+            "https://furia-web-chat-api.onrender.com/chat/getchat/",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
           const { chat } = await res.json();
           fetchedChat = chat;
           console.log(fetchedChat);
@@ -317,10 +341,13 @@ export default function Dashboard(): JSX.Element {
 
   const handleJoinPublicChat = async (chatId: string) => {
     try {
-      const res = await fetch(`/chat/joinchat/${chatId}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `https://furia-web-chat-api.onrender.com/chat/joinchat/${chatId}`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (!res.ok) throw new Error();
       const { data: joined } = await res.json();
       setChats((prev) =>
