@@ -81,6 +81,9 @@ app.use("/user", user_1.default);
 app.use("/chat", chat_1.default);
 app.use("/message", message_1.default);
 app.use("/auth", auth_1.default);
+app.get("/", (req, res, next) => {
+    res.send("<h1>hello world</h1>");
+});
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     console.error(error.message);

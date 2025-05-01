@@ -1,7 +1,7 @@
 {
   "name": "furia_webchat",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "dist/src/app.js",
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
